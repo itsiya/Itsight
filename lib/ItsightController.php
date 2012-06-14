@@ -62,11 +62,13 @@ class ItsightController {
 
 			$user_class = new $className($this);
 			$user_class->data = $this->request->params();
+			
 
 			//auth
 			if(in_array('Auth',$user_class->uses) ) {
 				//print_r(DATABASE_CONFIG::default_db());
 				$this->auth = new ItsightAuth(DATABASE_CONFIG::default_db());
+				$user_class->Auth = $this->auth;
 				$user_class->beforeAuthCheck();
 				$user_key = $this->request->params('key');
 				if(isset($user_key)) {
@@ -169,18 +171,12 @@ class ItsightController {
         return $this->environment;
     }
 
-    /**
-     * Get the Request object
-     * @return Slim_Http_Request
-     */
+
     public function request() {
         return $this->request;
     }
 
-    /**
-     * Get the Response object
-     * @return Slim_Http_Response
-     */
+
     public function response() {
         return $this->response;
     }
@@ -247,7 +243,6 @@ class ItsightController {
 
     public function pass() {
         $this->cleanBuffer();
-        throw new Exception();
     }
 
 
@@ -261,14 +256,10 @@ class ItsightController {
     }
 
 
-    public function urlFor( $name, $params = array() ) {
-        return $this->router->urlFor($name, $params);
-    }
-
-
     public function redirect( $url, $status = 302 ) {
         $this->response->redirect($url, $status);
-        $this->halt($status, $url); }
+        $this->halt($status, $url); 
+	}
 
 }
 

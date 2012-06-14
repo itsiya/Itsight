@@ -1,7 +1,10 @@
 <?php
 class ItsightView {
+	
 	protected $data = array();
+	
 	protected $templatesDirectory;
+
 	public function __construct() {}
 
     public function setData() {

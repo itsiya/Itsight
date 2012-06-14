@@ -13,12 +13,12 @@ class ItsightAuthModel {
 	}
 
 
-
 	public function cheackUserLogin($user_id,$user_pw) {
 		$query = 
-			"select ".$this->config['authid'].",".$this->config['authpassword'].
+			"select * ".
 			" from ".$this->config['authtable'].
-			" where ".$this->config['authid']." = "."'$user_id'".",".$this->config['authpassword']." = "."'$user_pw'".
+			" where ".$this->config['authtable'].".".$this->config['authid']." = "."'$user_id'".
+			" and ".$this->config['authtable'].".".$this->config['authpassword']." = "."'$user_pw'".
 			""; 
 
 		$result = mysql_query($query); 
@@ -36,17 +36,17 @@ class ItsightAuthModel {
 		$query = 
 			"UPDATE ".$this->config['authtable'].
 			" SET ".$this->config['authtable'].".".$this->config['authkey']." = " ."'$key'".
-			" WHERE ".$this->config['authtable'].".".$this->config['authid']." = ".$user_id."LIMIT 1 ".
+			" WHERE ".$this->config['authtable'].".".$this->config['authid']." = "."'$user_id'"."LIMIT 1 ".
 			""; 
-
+		//echo $query;
 		$result = mysql_query($query); 
-
-		while($row = mysql_fetch_assoc($result))
-		{
-			return $row;
+		
+		if (!$result) {
+			echo "Could not successfully run query ($query) from DB: " . mysql_error();
+			return false;
+		}else {
+			return true ;
 		}
-
-		return false ;
 	}
 	public function checkUserKey($key) {
 		$query = 

@@ -8,6 +8,8 @@ class ItsightAPI {
 
 	public $User = null;
 
+	public $Auth = null;
+
 	public function __construct($itsight_controller){
 		$this->controller = $itsight_controller;
 	}
