@@ -69,23 +69,25 @@ class ItsightController {
 				//print_r(DATABASE_CONFIG::default_db());
 				$this->auth = new ItsightAuth(DATABASE_CONFIG::default_db());
 				$user_class->Auth = $this->auth;
-				$user_class->beforeAuthCheck();
-				$user_key = $this->request->params('key');
-				if(isset($user_key)) {
-					//echo $user_key;
-					$user = $this->auth->checkUserKey($user_key);
-					if (isset($user)) {
-						$user_class->User = $user;
-						$user_class->authCheckSuccess();
+				if(in_array('Auth.key',$user_class->uses) ) {
+					$user_class->beforeAuthCheck();
+					$user_key = $this->request->params('key');
+					if(isset($user_key)) {
+						//echo $user_key;
+						$user = $this->auth->checkUserKey($user_key);
+						if (isset($user)) {
+							$user_class->User = $user;
+							$user_class->authCheckSuccess();
+						} else {
+							$user_class->authCheckFail();
+							throw new Exception('Auth error : key check fails');
+							
+						}
 					} else {
 						$user_class->authCheckFail();
-						throw new Exception('Auth error : key check fails');
+						throw new Exception('Auth error : miss Key');
 						
 					}
-				} else {
-					$user_class->authCheckFail();
-					throw new Exception('Auth error : miss Key');
-					
 				}
 			}
 
